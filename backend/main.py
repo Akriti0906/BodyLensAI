@@ -1,0 +1,50 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from models.bmi import BMIRequest
+from services.health_service import calculate_bmi_and_recommendation
+
+from database.database import engine, Base
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(
+    title="BodyLens AI API",
+    version="1.0.0"
+)
+
+# CORS Configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Home Route
+@app.get("/")
+def home():
+    return {
+        "message": "Welcome to BodyLens AI 🚀",
+        "status": "Server Running Successfully"
+    }
+
+# BMI Route
+@app.post("/bmi")
+def calculate_bmi(data: BMIRequest):
+    return calculate_bmi_and_recommendation(
+        age=data.age,
+        gender=data.gender,
+        height_cm=data.height_cm,
+        weight_kg=data.weight_kg,
+        activity_level=data.activity_level,
+        goal=data.goal,
+        condition=data.condition
+    )

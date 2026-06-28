@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BodyLens AI</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🏋️ BodyLens AI</h1>
+
+    <p class="subtitle">
+        Your Personal AI Fitness Assistant
+    </p>
+
+    <div class="form">
+
+        <input type="number" id="age" placeholder="Age">
+
+        <select id="gender">
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+
+        <input type="number" id="height" placeholder="Height (cm)">
+
+        <input type="number" id="weight" placeholder="Weight (kg)">
+
+        <select id="activity">
+            <option value="">Activity Level</option>
+            <option value="sedentary">Sedentary</option>
+            <option value="lightly_active">Lightly Active</option>
+            <option value="moderately_active">Moderately Active</option>
+            <option value="very_active">Very Active</option>
+        </select>
+
+        <select id="goal">
+            <option value="">Select Goal</option>
+            <option value="lose_weight">Lose Weight</option>
+            <option value="gain_weight">Gain Weight</option>
+            <option value="maintain_weight">Maintain Weight</option>
+        </select>
+
+        <select id="condition">
+            <option value="">Select Condition</option>
+            <option value="none">None</option>
+            <option value="pcos">PCOS</option>
+            <option value="diabetes">Diabetes</option>
+            <option value="knee_pain">Knee Pain</option>
+            <option value="back_pain">Back Pain</option>
+        </select>
+
+        <button onclick="calculateBMI()">
+            Analyze My Body
+        </button>
+
+    </div>
+
+    <div id="result" class="result"></div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/ui.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
