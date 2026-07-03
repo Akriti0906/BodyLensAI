@@ -1,34 +1,66 @@
+from services.exercise_service import get_exercise_details
+
+
 def generate_workout_plan(goal):
 
     if goal.lower() == "lose_weight":
-        return {
-            "monday": "30 min Cardio + Squats",
-            "tuesday": "Upper Body Workout",
-            "wednesday": "Walking + Abs Workout",
-            "thursday": "Strength Training",
-            "friday": "HIIT Workout",
-            "saturday": "Full Body Workout",
+
+        workout = {
+            "monday": "Squats",
+            "tuesday": "Push Ups",
+            "wednesday": "Walking",
+            "thursday": "Plank",
+            "friday": "Lunges",
+            "saturday": "Squats",
             "sunday": "Rest Day"
         }
 
     elif goal.lower() == "gain_weight":
-        return {
-            "monday": "Chest + Triceps",
-            "tuesday": "Back + Biceps",
-            "wednesday": "Leg Day",
-            "thursday": "Shoulders",
-            "friday": "Arms",
-            "saturday": "Full Body Strength",
+
+        workout = {
+            "monday": "Push Ups",
+            "tuesday": "Squats",
+            "wednesday": "Lunges",
+            "thursday": "Plank",
+            "friday": "Push Ups",
+            "saturday": "Squats",
             "sunday": "Rest Day"
         }
 
     else:
-        return {
+
+        workout = {
             "monday": "Walking",
-            "tuesday": "Light Strength Training",
-            "wednesday": "Yoga",
-            "thursday": "Walking",
-            "friday": "Bodyweight Workout",
-            "saturday": "Stretching",
+            "tuesday": "Plank",
+            "wednesday": "Walking",
+            "thursday": "Lunges",
+            "friday": "Push Ups",
+            "saturday": "Squats",
             "sunday": "Rest Day"
         }
+
+    detailed_workout = {}
+
+    for day, exercise in workout.items():
+
+        if exercise == "Rest Day":
+
+            detailed_workout[day] = {
+                "name": "Rest Day",
+                "image": "",
+                "steps": [],
+                "benefits": ["Allow your body to recover."]
+            }
+
+        else:
+
+            details = get_exercise_details(exercise)
+
+            detailed_workout[day] = {
+                "name": exercise,
+                "image": details["image"],
+                "steps": details["steps"],
+                "benefits": details["benefits"]
+            }
+
+    return detailed_workout

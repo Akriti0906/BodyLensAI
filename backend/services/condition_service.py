@@ -25,6 +25,11 @@ def get_condition_advice(condition):
             "condition_advice":
             "Focus on posture improvement, stretching and core strengthening exercises."
         }
+    elif condition == "none":
+        return {
+            "condition_advice":
+            "No specific condition selected. Keep following your personalized plan and stay consistent."
+        }
 
     else:
         return {

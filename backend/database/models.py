@@ -19,9 +19,11 @@ class HealthReport(Base):
 
     goal = Column(String)
     condition = Column(String)
+    activity_level = Column(String)
 
     calories = Column(Integer)
-
     protein = Column(Integer)
-
     water = Column(Float)
+
+    health_score = Column(Integer)
+    risk_level = Column(String)

@@ -1,12 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from database.database import Base, engine
+from database import models
+
 from models.bmi import BMIRequest
 from services.health_service import calculate_bmi_and_recommendation
 
-from database.database import engine, Base
+from fastapi import Depends
+from sqlalchemy.orm import Session
 
-# Create database tables
+from database.database import get_db
+from database.models import HealthReport
+
+
+# Create Database Tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -28,6 +36,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Home Route
 @app.get("/")
 def home():
@@ -38,8 +47,8 @@ def home():
 
 # BMI Route
 @app.post("/bmi")
-def calculate_bmi(data: BMIRequest):
-    return calculate_bmi_and_recommendation(
+def calculate_bmi(data: BMIRequest, db: Session = Depends(get_db)):
+    result = calculate_bmi_and_recommendation(
         age=data.age,
         gender=data.gender,
         height_cm=data.height_cm,
@@ -48,3 +57,19 @@ def calculate_bmi(data: BMIRequest):
         goal=data.goal,
         condition=data.condition
     )
+    report = HealthReport(
+        age=data.age,
+        gender=data.gender,
+        height=data.height_cm,
+        weight=data.weight_kg,
+        bmi=result["bmi"],
+        category=result["category"],
+        goal=result["goal"],
+        condition=result["condition"],
+        calories=result["target_calories"],
+        protein=result["protein_g"],
+        water=result["water_liters"],
+    )
+    db.add(report)
+    db.commit()
+    return result
