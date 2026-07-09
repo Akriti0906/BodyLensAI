@@ -72,7 +72,7 @@ def calculate_bmi_and_recommendation(
     diet_plan = generate_diet_plan(
         goal,
         condition)
-    workout_plan = generate_workout_plan(goal)
+    workout_plan = generate_workout_plan(goal, condition)
     condition_data = get_condition_advice(condition)
 
     # Health Score
@@ -92,24 +92,26 @@ def calculate_bmi_and_recommendation(
         health_score=health_score,
         risk_level=risk_level
     )
-    save_report(
-    {
-        "age": age,
-        "gender": gender,
-        "height": height_cm,
-        "weight": weight_kg,
-        "bmi": round(bmi, 2),
-        "category": category,
-        "goal": goal,
-        "condition": condition,
-        "activity_level": activity_level,
-        "calories": target_calories,
-        "protein": protein_g,
-        "water": water_liters,
-        "health_score": health_score,
-        "risk_level": risk_level
-    }
-)
+    try:
+        save_report({
+             "age": age,
+            "gender": gender,
+            "height": height_cm,
+            "weight": weight_kg,
+            "bmi": round(bmi, 2),
+            "category": category,
+            "goal": goal,
+            "condition": condition,
+            "activity_level": activity_level,
+            "calories": target_calories,
+            "protein": protein_g,
+            "water": water_liters,
+            "health_score": health_score,
+            "risk_level": risk_level
+          })   # the dict you already have
+    except Exception as e:
+        print(f"[save_report] Failed to persist report: {e}")
+   
 
 
     return {

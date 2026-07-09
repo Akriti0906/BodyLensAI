@@ -76,7 +76,8 @@ def generate_ai_report(
 
     # Health Score
     report.append(
-        f"Your overall Health Score is {health_score}/100 with a {risk_level}. Continue building healthy habits for long-term wellness."
+        f"Your overall Health Score is {health_score}/100 with a {risk_level} risk level. Continue building healthy habits for long-term wellness."
+        
     )
 
     report.append(

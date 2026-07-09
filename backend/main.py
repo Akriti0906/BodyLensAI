@@ -1,3 +1,4 @@
+from services.chat_service import get_chat_response
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -6,13 +7,7 @@ from database import models
 
 from models.bmi import BMIRequest
 from services.health_service import calculate_bmi_and_recommendation
-
-from fastapi import Depends
-from sqlalchemy.orm import Session
-
-from database.database import get_db
-from database.models import HealthReport
-
+from services.report_service import get_all_reports
 
 # Create Database Tables
 Base.metadata.create_all(bind=engine)
@@ -44,11 +39,16 @@ def home():
         "message": "Welcome to BodyLens AI 🚀",
         "status": "Server Running Successfully"
     }
+# History Route
+@app.get("/reports")
+def read_reports():
+    return get_all_reports()
+
 
 # BMI Route
 @app.post("/bmi")
-def calculate_bmi(data: BMIRequest, db: Session = Depends(get_db)):
-    result = calculate_bmi_and_recommendation(
+def calculate_bmi(data: BMIRequest):
+    return calculate_bmi_and_recommendation(
         age=data.age,
         gender=data.gender,
         height_cm=data.height_cm,
@@ -57,19 +57,20 @@ def calculate_bmi(data: BMIRequest, db: Session = Depends(get_db)):
         goal=data.goal,
         condition=data.condition
     )
-    report = HealthReport(
-        age=data.age,
-        gender=data.gender,
-        height=data.height_cm,
-        weight=data.weight_kg,
-        bmi=result["bmi"],
-        category=result["category"],
-        goal=result["goal"],
-        condition=result["condition"],
-        calories=result["target_calories"],
-        protein=result["protein_g"],
-        water=result["water_liters"],
-    )
-    db.add(report)
-    db.commit()
-    return result
+from pydantic import BaseModel
+
+class ChatRequest(BaseModel):
+    message: str
+
+# Chatbot Route
+
+from typing import Optional
+
+class ChatRequest(BaseModel):
+    message: str
+    profile: Optional[dict] = None
+
+# Chatbot Route
+@app.post("/chat")
+def chat(data: ChatRequest):
+    return get_chat_response(data.message, data.profile)
