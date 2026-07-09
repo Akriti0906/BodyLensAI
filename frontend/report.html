@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Your Health Report - BodyLens AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+
+        <h1>🏋️ BodyLens AI</h1>
+
+        <button
+            type="button"
+            onclick="goHome()"
+            class="back-btn">
+            ← Back / New Analysis
+        </button>
+
+    </div>
+
+    <p class="subtitle">
+        Your Personal AI Fitness Assistant
+    </p>
+
+    <div id="result" class="result"></div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="js/ui.js"></script>
+<script src="script.js"></script>
+
+<script>
+function goHome() {
+    sessionStorage.removeItem("lastReport");
+    window.location.href = "index.html";
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    const saved = sessionStorage.getItem("lastReport");
+
+    if (!saved) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    try {
+        const data = JSON.parse(saved);
+        renderResult(data);
+    } catch (e) {
+        console.error("Could not load report:", e);
+        window.location.href = "index.html";
+    }
+
+});
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    if (window.lucide) lucide.createIcons();
+</script>
+<script src="js/chat.js"></script>
+
+</body>
+</html>

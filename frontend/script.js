@@ -29,22 +29,8 @@ async function calculateBMI() {
 console.log(data);
 
 // Save report for PDF
-window.lastReport = data;
-
-try {
-
-    console.log("renderResult started");
-    console.log(document.getElementById("result"));
-
-    renderResult(data);
-
-    console.log("renderResult finished");
-
-} catch (e) {
-
-    console.error("Render Error:", e);
-
-}
+sessionStorage.setItem("lastReport", JSON.stringify(data));
+window.location.href = "report.html";
 
      
 
@@ -213,3 +199,4 @@ async function downloadPDF() {
 
     pdf.save("BodyLensAI_Report.pdf");
 }
+

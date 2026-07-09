@@ -9,61 +9,129 @@
     <title>BodyLens AI</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
-    
+
 
 <div class="container">
 
-    <h1>🏋️ BodyLens AI</h1>
+    <!-- ===== HERO ===== -->
+    <div class="hero">
 
-    <p class="subtitle">
-        Your Personal AI Fitness Assistant
-    </p>
+        <div class="hero-badge">
+            <i data-lucide="sparkles"></i>
+            AI-Powered Health Analysis
+        </div>
 
+        <h1 class="hero-title">
+            Transform Your Body,<br>
+            <span class="hero-highlight">Powered by AI</span>
+        </h1>
+
+        <p class="hero-desc">
+            Get your personalized BMI analysis, diet plan, and workout roadmap
+            in seconds — tailored to your body, goals, and health.
+        </p>
+
+        <div class="hero-stats">
+            <div class="hero-stat"><b>AI</b><span>Health Engine</span></div>
+            <div class="hero-stat"><b>20+</b><span>Exercises</span></div>
+            <div class="hero-stat"><b>100%</b><span>Personalized</span></div>
+        </div>
+
+    </div>
+
+    <!-- ===== FORM ===== -->
     <div class="form">
 
-        <input type="number" id="age" placeholder="Age">
+        <div class="field">
+            <i data-lucide="calendar" class="field-icon"></i>
+            <input type="number" id="age" placeholder="Age">
+        </div>
 
-        <select id="gender">
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
+        <div class="field">
+            <i data-lucide="user" class="field-icon"></i>
+            <select id="gender">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
 
-        <input type="number" id="height" placeholder="Height (cm)">
+        <div class="field">
+            <i data-lucide="ruler" class="field-icon"></i>
+            <input type="number" id="height" placeholder="Height (cm)">
+        </div>
 
-        <input type="number" id="weight" placeholder="Weight (kg)">
+        <div class="field">
+            <i data-lucide="weight" class="field-icon"></i>
+            <input type="number" id="weight" placeholder="Weight (kg)">
+        </div>
 
-        <select id="activity">
-            <option value="">Activity Level</option>
-            <option value="sedentary">Sedentary</option>
-            <option value="lightly_active">Lightly Active</option>
-            <option value="moderately_active">Moderately Active</option>
-            <option value="very_active">Very Active</option>
-        </select>
+        <div class="field">
+            <i data-lucide="activity" class="field-icon"></i>
+            <select id="activity">
+                <option value="">Activity Level</option>
+                <option value="sedentary">Sedentary</option>
+                <option value="lightly_active">Lightly Active</option>
+                <option value="moderately_active">Moderately Active</option>
+                <option value="very_active">Very Active</option>
+            </select>
+        </div>
 
-        <select id="goal">
-            <option value="">Select Goal</option>
-            <option value="lose_weight">Lose Weight</option>
-            <option value="gain_weight">Gain Weight</option>
-            <option value="maintain_weight">Maintain Weight</option>
-        </select>
+        <div class="field">
+            <i data-lucide="target" class="field-icon"></i>
+            <select id="goal">
+                <option value="">Select Goal</option>
+                <option value="lose_weight">Lose Weight</option>
+                <option value="gain_weight">Gain Weight</option>
+                <option value="maintain_weight">Maintain Weight</option>
+            </select>
+        </div>
 
-        <select id="condition">
-            <option value="">Select Condition</option>
-            <option value="none">None</option>
-            <option value="pcos">PCOS</option>
-            <option value="diabetes">Diabetes</option>
-            <option value="knee_pain">Knee Pain</option>
-            <option value="back_pain">Back Pain</option>
-        </select>
+        <div class="field">
+            <i data-lucide="heart-pulse" class="field-icon"></i>
+            <select id="condition">
+                <option value="">Select Condition</option>
+                <option value="none">None</option>
+                <option value="pcos">PCOS</option>
+                <option value="diabetes">Diabetes</option>
+                <option value="knee_pain">Knee Pain</option>
+                <option value="back_pain">Back Pain</option>
+            </select>
+        </div>
 
         <button type="button" onclick="calculateBMI()">
-           Analyze My Body
+            <i data-lucide="scan-line"></i>
+            Analyze My Body
         </button>
+
+    </div>
+    <!-- ===== FEATURE CARDS ===== -->
+    <div class="features">
+
+        <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="salad"></i></div>
+            <h4>Smart Diet Plans</h4>
+            <p>Personalized meals with calories & macros for your goal.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="dumbbell"></i></div>
+            <h4>Workout Roadmap</h4>
+            <p>Weekly exercise plan with sets, reps, and demos.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="brain"></i></div>
+            <h4>AI Health Insights</h4>
+            <p>Intelligent analysis of your body and risk profile.</p>
+        </div>
 
     </div>
 
@@ -78,6 +146,12 @@
 <script src="js/validation.js"></script>
 <script src="js/ui.js"></script>
 <script src="script.js"></script>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    if (window.lucide) lucide.createIcons();
+</script>
+<script src="js/chat.js"></script>
 
 </body>
 </html>
