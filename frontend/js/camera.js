@@ -1,5 +1,5 @@
 /* ============================================================
-   BodyLens AI — AI Exercise Coach (Phase 1)
+   BodyLens AI — AI Exercise Coach (mirror + performance fixes)
    ============================================================ */
 
 const video   = document.getElementById("cam-video");
@@ -37,6 +37,7 @@ let running = false;
 let facingMode = "user";
 let repScores = [];
 let currentRepFaults = new Set();
+let busy = false;   // prevents overlapping frame processing
 
 function calcAngle(a, b, c) {
     const rad = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
@@ -55,11 +56,14 @@ function showCheck(show) {
 }
 
 function onResults(results) {
-    canvas.width = video.videoWidth || 1280;
-    canvas.height = video.videoHeight || 720;
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
 
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Mirror horizontally for a natural selfie view
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
     ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
 
     if (!results.poseLandmarks) {
@@ -148,8 +152,8 @@ async function startCamera() {
     if (!pose) initPose();
     setFeedback("Starting camera...", "");
     camera = new Camera(video, {
-        onFrame: async () => { if (running) await pose.send({ image: video }); },
-        width: 1280, height: 720, facingMode: facingMode
+        onFrame: async () => { if (running && !busy) { busy = true; await pose.send({ image: video }); busy = false; } },
+        width: 640, height: 480, facingMode: facingMode
     });
     try {
         await camera.start();
