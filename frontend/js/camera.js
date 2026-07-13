@@ -1,6 +1,5 @@
 /* ============================================================
-   BodyLens AI — AI Camera (Squat Form Analyzer)
-   Uses MediaPipe Pose (in-browser). No video leaves your device.
+   BodyLens AI — AI Camera v2 (Full-body 33-landmark tracking)
    ============================================================ */
 
 const video   = document.getElementById("cam-video");
@@ -11,12 +10,16 @@ const stageEl = document.getElementById("cam-stage");
 const angleEl = document.getElementById("cam-angle");
 const fbEl    = document.getElementById("cam-feedback");
 const startBtn = document.getElementById("cam-start");
+const stopBtn  = document.getElementById("cam-stop");
+const switchBtn = document.getElementById("cam-switch");
 const resetBtn = document.getElementById("cam-reset");
 
 let reps = 0;
 let stage = "up";
 let camera = null;
+let pose = null;
 let running = false;
+let facingMode = "user";
 
 function calcAngle(a, b, c) {
     const rad = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
@@ -31,8 +34,8 @@ function setFeedback(msg, type) {
 }
 
 function onResults(results) {
-    canvas.width = video.videoWidth || 640;
-    canvas.height = video.videoHeight || 480;
+    canvas.width = video.videoWidth || 1280;
+    canvas.height = video.videoHeight || 720;
 
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -41,9 +44,9 @@ function onResults(results) {
     if (results.poseLandmarks) {
         if (window.drawConnectors && window.POSE_CONNECTIONS) {
             drawConnectors(ctx, results.poseLandmarks, POSE_CONNECTIONS,
-                { color: "#7C3AED", lineWidth: 3 });
+                { color: "#7C3AED", lineWidth: 4 });
             drawLandmarks(ctx, results.poseLandmarks,
-                { color: "#10B981", lineWidth: 1, radius: 4 });
+                { color: "#10B981", fillColor: "#34D399", lineWidth: 2, radius: 5 });
         }
 
         const lm = results.poseLandmarks;
@@ -70,7 +73,7 @@ function onResults(results) {
                 setFeedback(stage === "up" ? "Go lower..." : "Push up!", "warn");
             }
         } else {
-            setFeedback("Make sure your legs are visible", "warn");
+            setFeedback("Step back — make sure your full body is visible", "warn");
             angleEl.textContent = "—";
         }
     } else {
@@ -79,16 +82,16 @@ function onResults(results) {
     ctx.restore();
 }
 
-let pose = null;
 function initPose() {
     pose = new Pose({
         locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
     });
     pose.setOptions({
-        modelComplexity: 1,
+        modelComplexity: 2,
         smoothLandmarks: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5
+        enableSegmentation: false,
+        minDetectionConfidence: 0.6,
+        minTrackingConfidence: 0.6
     });
     pose.onResults(onResults);
 }
@@ -99,22 +102,43 @@ async function startCamera() {
 
     setFeedback("Starting camera...", "");
     camera = new Camera(video, {
-        onFrame: async () => { await pose.send({ image: video }); },
-        width: 640,
-        height: 480
+        onFrame: async () => { if (running) await pose.send({ image: video }); },
+        width: 1280,
+        height: 720,
+        facingMode: facingMode
     });
     try {
         await camera.start();
         running = true;
-        startBtn.innerHTML = '<i data-lucide="pause"></i> Camera On';
-        if (window.lucide) lucide.createIcons();
-        setFeedback("Stand back and start squatting!", "good");
+        startBtn.style.display = "none";
+        stopBtn.style.display = "inline-flex";
+        setFeedback("Stand back so your whole body is visible!", "good");
     } catch (e) {
         setFeedback("Camera access denied. Please allow the camera.", "warn");
     }
 }
 
+function stopCamera() {
+    running = false;
+    if (camera) { camera.stop(); }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    startBtn.style.display = "inline-flex";
+    stopBtn.style.display = "none";
+    setFeedback("Camera stopped", "");
+}
+
+async function switchCamera() {
+    facingMode = (facingMode === "user") ? "environment" : "user";
+    if (running) {
+        stopCamera();
+        await startCamera();
+    }
+    setFeedback("Switched camera", "");
+}
+
 startBtn.addEventListener("click", startCamera);
+stopBtn.addEventListener("click", stopCamera);
+switchBtn.addEventListener("click", switchCamera);
 resetBtn.addEventListener("click", () => {
     reps = 0;
     stage = "up";
