@@ -1005,3 +1005,321 @@ select option { background: #2A2745; color: #F1F5F9; }
     70%  { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
     100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
 }
+/* ============================================================
+   AI CAMERA — Squat Form Analyzer
+   ============================================================ */
+.cam-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    aspect-ratio: 4 / 3;
+    background: #17142A;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: var(--shadow-md);
+}
+#cam-video { display: none; }
+#cam-canvas { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.cam-overlay {
+    position: absolute; top: 12px; left: 12px;
+    display: flex; gap: 10px; flex-wrap: wrap;
+}
+.cam-stat {
+    background: rgba(15,10,35,.75);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    padding: 8px 14px;
+    display: flex; flex-direction: column; align-items: center;
+    min-width: 70px;
+}
+.cam-stat-label { font-size: 11px; color: #A9B0C8; text-transform: uppercase; letter-spacing: .04em; }
+.cam-stat-num { font-size: 1.8rem; font-weight: 800; color: #fff; line-height: 1; }
+.cam-stat-val { font-size: 1.1rem; font-weight: 700; color: #C4B5FD; }
+
+.cam-feedback {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+    background: rgba(15,10,35,.8);
+    backdrop-filter: blur(6px);
+    color: #fff; font-weight: 600; font-size: 15px;
+    padding: 10px 22px; border-radius: var(--r-full);
+    border: 1px solid rgba(255,255,255,.12);
+    white-space: nowrap;
+}
+.cam-fb-good { border-color: rgba(16,185,129,.5); color: #6EE7B7; }
+.cam-fb-warn { border-color: rgba(245,158,11,.5); color: #FCD34D; }
+
+.cam-controls {
+    display: flex; gap: 12px; justify-content: center;
+    margin-top: 20px; flex-wrap: wrap;
+}
+.cam-controls button { display: inline-flex; align-items: center; gap: 8px; }
+.cam-controls button i { width: 18px; height: 18px; }
+
+@media (max-width: 640px) {
+    .cam-stat-num { font-size: 1.4rem; }
+    .cam-feedback { font-size: 13px; padding: 8px 16px; }
+}
+/* ============================================================
+   PREMIUM GRAIN + GLASS (dark theme) — Landing page
+   ============================================================ */
+
+/* Animated gradient mesh behind everything */
+body {
+    position: relative;
+    background:
+        radial-gradient(1400px 900px at 25% 15%, rgba(139,92,246,.45), transparent 60%),
+        radial-gradient(1200px 800px at 80% 85%, rgba(59,130,246,.40), transparent 60%),
+        radial-gradient(1000px 900px at 60% 40%, rgba(236,72,153,.25), transparent 65%),
+        linear-gradient(160deg, #0B0A1A 0%, #16132E 100%);
+    background-attachment: fixed;
+    background-size: 200% 200%;
+    animation: grainShift 18s ease-in-out infinite alternate;
+}
+@keyframes grainShift {
+    0%   { background-position: 0% 0%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 50% 100%; }
+}
+
+/* Grain/noise overlay using an inline SVG texture */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: .12;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+}
+
+/* Glassmorphism container */
+.container {
+    background: rgba(30, 27, 51, 0.55);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    animation: fadeInUp .7s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* Glass form fields */
+.field input, .field select {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    color: #F1F5F9;
+}
+.field input::placeholder { color: #9CA3C4; }
+.field input:focus, .field select:focus {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: rgba(139, 92, 246, 0.6);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+}
+
+/* Glass feature cards + hover scale */
+.feature-card, .hero-stats {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
+    transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s ease;
+}
+.feature-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(124, 58, 237, 0.25);
+}
+
+/* Monospace labels (Paper Design vibe) */
+.hero-badge, .stat-label, .hero-stat span {
+    font-family: 'Space Mono', 'Courier New', monospace;
+    letter-spacing: .02em;
+}
+
+/* Premium button with hover/active */
+.form button {
+    transition: transform .2s cubic-bezier(.34,1.4,.5,1), box-shadow .2s ease;
+}
+.form button:hover { transform: translateY(-2px) scale(1.01); }
+.form button:active { transform: translateY(0) scale(.99); }
+
+/* Reduce grain on small screens for performance */
+@media (max-width: 640px) {
+    body::after { opacity: .35; }
+    .container { backdrop-filter: blur(14px); }
+}
+/* ============================================================
+   GRAIN GRADIENT (Paper Design style) — Landing page
+   ============================================================ */
+
+body {
+    position: relative;
+    background:
+        radial-gradient(900px 700px at 100% 0%,   rgba(0,191,255,.55),  transparent 55%),
+        radial-gradient(800px 650px at 88% 22%,    rgba(235,168,255,.50), transparent 50%),
+        radial-gradient(900px 750px at 0% 100%,    rgba(0,191,255,.50),  transparent 55%),
+        radial-gradient(850px 700px at 14% 82%,    rgba(235,168,255,.45), transparent 50%),
+        radial-gradient(700px 600px at 50% 50%,    rgba(115,0,255,.30),  transparent 60%),
+        #000000;
+    background-attachment: fixed;
+    background-size: 200% 200%;
+    animation: grainFlow 22s ease-in-out infinite alternate;
+}
+@keyframes grainFlow {
+    0%   { background-position: 0% 0%; }
+    50%  { background-position: 100% 60%; }
+    100% { background-position: 40% 100%; }
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: .55;
+    mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    animation: grainMove 8s steps(6) infinite;
+}
+@keyframes grainMove {
+    0%   { transform: translate(0,0); }
+    100% { transform: translate(-8px,-8px); }
+}
+
+.container {
+    background: rgba(18, 16, 34, 0.62);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    animation: fadeInUp .7s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.field input, .field select {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #F1F5F9;
+}
+.field input::placeholder { color: #9CA3C4; }
+.field input:focus, .field select:focus {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: rgba(139, 92, 246, 0.6);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+}
+
+.feature-card, .hero-stats {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
+    transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s ease;
+}
+.feature-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(115, 0, 255, 0.3);
+}
+
+.hero-badge, .stat-label, .hero-stat span {
+    font-family: 'Space Mono', 'Courier New', monospace;
+    letter-spacing: .02em;
+}
+
+.form button { transition: transform .2s cubic-bezier(.34,1.4,.5,1), box-shadow .2s ease; }
+.form button:hover { transform: translateY(-2px) scale(1.01); }
+.form button:active { transform: translateY(0) scale(.99); }
+
+@media (max-width: 640px) {
+    body::after { opacity: .4; }
+    .container { backdrop-filter: blur(16px); }
+}
+/* Paper Design shader canvas background */
+#grain-bg {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    display: block;
+}
+/* ============================================================
+/* ============================================================
+   ROAMING GLOW ORBS — orbs travel all around the screen
+   ============================================================ */
+.glow-orbs {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+.glow-orbs span {
+    position: absolute;
+    border-radius: 50%;
+  filter: blur(120px);      /* zyada blur = softer */
+    opacity: .35; 
+    will-change: transform;
+    top: 0; left: 0;
+}
+
+.glow-orbs span:nth-child(1) { width: 440px; height: 440px; background: #7300ff; animation: roam1 16s ease-in-out infinite; }
+.glow-orbs span:nth-child(2) { width: 400px; height: 400px; background: #00bfff; animation: roam2 19s ease-in-out infinite; }
+.glow-orbs span:nth-child(3) { width: 380px; height: 380px; background: #eba8ff; animation: roam3 14s ease-in-out infinite; }
+.glow-orbs span:nth-child(4) { width: 340px; height: 340px; background: #2a00ff; animation: roam4 21s ease-in-out infinite; }
+.glow-orbs span:nth-child(5) { width: 320px; height: 320px; background: #00bfff; animation: roam5 17s ease-in-out infinite; }
+
+@keyframes roam1 {
+    0%   { transform: translate(5vw, 10vh) scale(1); }
+    25%  { transform: translate(70vw, 20vh) scale(1.2); }
+    50%  { transform: translate(60vw, 70vh) scale(1); }
+    75%  { transform: translate(10vw, 60vh) scale(1.15); }
+    100% { transform: translate(5vw, 10vh) scale(1); }
+}
+@keyframes roam2 {
+    0%   { transform: translate(80vw, 15vh) scale(1); }
+    25%  { transform: translate(20vw, 30vh) scale(1.15); }
+    50%  { transform: translate(15vw, 75vh) scale(1.25); }
+    75%  { transform: translate(75vw, 65vh) scale(1); }
+    100% { transform: translate(80vw, 15vh) scale(1); }
+}
+@keyframes roam3 {
+    0%   { transform: translate(30vw, 80vh) scale(1); }
+    25%  { transform: translate(75vw, 55vh) scale(1.2); }
+    50%  { transform: translate(60vw, 10vh) scale(1); }
+    75%  { transform: translate(15vw, 25vh) scale(1.15); }
+    100% { transform: translate(30vw, 80vh) scale(1); }
+}
+@keyframes roam4 {
+    0%   { transform: translate(70vw, 75vh) scale(1); }
+    25%  { transform: translate(10vw, 60vh) scale(1.1); }
+    50%  { transform: translate(25vw, 15vh) scale(1.2); }
+    75%  { transform: translate(80vw, 30vh) scale(1); }
+    100% { transform: translate(70vw, 75vh) scale(1); }
+}
+@keyframes roam5 {
+    0%   { transform: translate(45vw, 40vh) scale(1); }
+    25%  { transform: translate(15vw, 15vh) scale(1.2); }
+    50%  { transform: translate(80vw, 60vh) scale(1); }
+    75%  { transform: translate(40vw, 80vh) scale(1.15); }
+    100% { transform: translate(45vw, 40vh) scale(1); }
+}
+
+@media (max-width: 640px) {
+    .glow-orbs span { filter: blur(55px); opacity: .45; }
+}

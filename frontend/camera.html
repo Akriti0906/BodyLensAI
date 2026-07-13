@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Camera - BodyLens AI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h1>🏋️ BodyLens AI</h1>
+        <a href="index.html" class="back-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+            <i data-lucide="arrow-left"></i> Home
+        </a>
+    </div>
+
+    <div class="hero" style="margin-bottom:20px;">
+        <div class="hero-badge"><i data-lucide="scan-line"></i> AI Form Checker</div>
+        <h1 class="hero-title" style="font-size:1.9rem;">Squat Form Analyzer</h1>
+        <p class="hero-desc">Stand back so your full body is visible. The AI will count your reps and check your form in real time.</p>
+    </div>
+
+    <div class="cam-wrap">
+        <video id="cam-video" playsinline></video>
+        <canvas id="cam-canvas"></canvas>
+
+        <div id="cam-overlay" class="cam-overlay">
+            <div class="cam-stat"><span class="cam-stat-label">Reps</span><span id="cam-reps" class="cam-stat-num">0</span></div>
+            <div class="cam-stat"><span class="cam-stat-label">Stage</span><span id="cam-stage" class="cam-stat-val">—</span></div>
+            <div class="cam-stat"><span class="cam-stat-label">Knee Angle</span><span id="cam-angle" class="cam-stat-val">—</span></div>
+        </div>
+
+        <div id="cam-feedback" class="cam-feedback">Press Start to begin</div>
+    </div>
+
+    <div class="cam-controls">
+        <button id="cam-start" type="button"><i data-lucide="play"></i> Start Camera</button>
+        <button id="cam-reset" type="button" class="back-btn"><i data-lucide="rotate-ccw"></i> Reset Reps</button>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="js/camera.js"></script>
+<script>if (window.lucide) lucide.createIcons();</script>
+
+</body>
+</html>

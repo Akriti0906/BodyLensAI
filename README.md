@@ -80,7 +80,7 @@ AI health assistant they can chat with by text **or voice**.
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/BodyLensAI.git
+git clone https://github.com/Akriti0906/BodyLensAI.git
 cd BodyLensAI
 ```
 
@@ -95,7 +95,7 @@ pip install -r requirement.txt
 
 ### 3. Add your API key
 Create a file named `.env` inside the `backend/` folder:
-GEMINI_API_KEY=AQ.Ab8RN6JFsadZWkA1lQWTpka69Xio83DmqKTnajFBvBRkh9hEfQ
+GEMINI_API_KEY=
 ### 4. Run the backend
 ```bash
 uvicorn main:app --reload

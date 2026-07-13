@@ -1,5 +1,6 @@
 /* ============================================================
    BodyLens AI — Floating Chat Assistant (with Voice)
+   Voice output ONLY for microphone input, never for typed text.
    ============================================================ */
 
 (function () {
@@ -128,7 +129,9 @@
         return t;
     }
 
-    async function sendMessage() {
+    // viaVoice = true  -> reply is also spoken aloud (mic input)
+    // viaVoice = false -> reply is shown as text only (typed input)
+    async function sendMessage(viaVoice = false) {
         const text = inputEl.value.trim();
         if (!text) return;
 
@@ -148,7 +151,7 @@
             typing.remove();
             const reply = data.reply || "Sorry, I couldn't respond.";
             addMessage(reply, "bot");
-            speak(reply);
+            if (viaVoice) speak(reply);   // speak ONLY for voice input
         } catch (err) {
             typing.remove();
             addMessage("Cannot reach the assistant. Make sure the server is running.", "bot");
@@ -158,11 +161,13 @@
         }
     }
 
-    sendBtn.addEventListener("click", sendMessage);
+    // Typed input: send button and Enter key -> text only (no voice)
+    sendBtn.addEventListener("click", () => sendMessage(false));
     inputEl.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") sendMessage();
+        if (e.key === "Enter") sendMessage(false);
     });
 
+    // Voice input: mic -> reply is spoken
     if (voiceInputSupported) {
         const recognition = new SR();
         recognition.lang = "en-US";
@@ -181,7 +186,7 @@
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
             inputEl.value = transcript;
-            sendMessage();
+            sendMessage(true);   // voice input -> speak the reply
         };
     }
 
