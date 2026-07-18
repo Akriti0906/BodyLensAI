@@ -56,8 +56,8 @@ function showCheck(show) {
 }
 
 function onResults(results) {
-    canvas.width = video.videoWidth || 640;
-    canvas.height = video.videoHeight || 480;
+    canvas.width = video.videoWidth || 960;
+    canvas.height = video.videoHeight || 720;
 
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -153,7 +153,7 @@ async function startCamera() {
     setFeedback("Starting camera...", "");
     camera = new Camera(video, {
         onFrame: async () => { if (running && !busy) { busy = true; await pose.send({ image: video }); busy = false; } },
-        width: 640, height: 480, facingMode: facingMode
+        width: 960, height: 720, facingMode: facingMode
     });
     try {
         await camera.start();
